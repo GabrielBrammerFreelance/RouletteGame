@@ -13,6 +13,8 @@ public class Main {
 			while (!lost) {
 				
 				GameState.CheckBonds();
+				GameState.CheckRent();
+				
 				GameState.PrintOptions();
 				input = ScrInput.nextLine().trim().toLowerCase();
 				//TODO: This is where the logic for what to do will happen.

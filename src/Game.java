@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
+	int rent;
 	int cash;
 	int CurrentTurn;
 	Wheel StartWheel;
@@ -10,6 +11,7 @@ public class Game {
 	ArrayList<Bond> Bonds;
 	
 	Game(Scanner scr){
+		rent = 10;
 		Bonds = new ArrayList<Bond>();
 		this.CurrentTurn = 1;
 		this.cash = 200;
@@ -24,6 +26,7 @@ public class Game {
 	
 	public void PrintOptions() {
 		System.out.println("You currently have $" + cash + ".");
+		RentDueIn();
 		System.out.println("What would you like to do?");
 		System.out.println("Bet - Place a bet and spin the wheel.");
 		System.out.println("View - View the numbers on your wheel.");
@@ -37,7 +40,6 @@ public class Game {
 		int num;
 		TileColor Color;
 		System.out.println("How much would you like to bet?");
-		System.out.println("(Type \"cancel\" at any time to cancel bet.");
 		input = BetInput.nextLine();
 		input = input.trim();
 		if (input.equalsIgnoreCase("cancel")) {
@@ -52,6 +54,7 @@ public class Game {
 		System.out.println("What kind of bet would you like to make?");
 		System.out.println("1 - Color Bet.");
 		System.out.println("2 - Number Bet.");
+		System.out.println("3 - Even/Odd Bet.");
 		input = BetInput.nextLine();
 		input = input.trim();
 		
@@ -91,7 +94,6 @@ public class Game {
 			
 			if (Color.equals(Result.getColor())) {
 				System.out.println("You win!");
-				bet = bet + bet;
 				try {
 					Thread.sleep(1);
 				} catch (InterruptedException e) {
@@ -132,9 +134,9 @@ public class Game {
 			Tile Result = this.GameWheel.Spin();
 			System.out.println("The ball landed on: " + Result.toString() + ".");
 			
-			if (num == Result.getNumber()) {
+			if (num == Result.getNumber() && Result.getNumber() != 0) {
 				System.out.println("You win!");
-				bet = bet*36;
+				bet = bet*35;
 				try {
 					Thread.sleep(1);
 				} catch (InterruptedException e) {
@@ -148,6 +150,93 @@ public class Game {
 			else {
 				Lose(bet);
 			}
+		}
+		else if (input.equals("3")){
+			System.out.println("1 - Even.");
+			System.out.println("2 - Odd.");
+			input = BetInput.nextLine();
+			input = input.trim();
+			if (input.equalsIgnoreCase("1")){
+				//even
+				System.out.println("Your bet is locked in!  Press enter to spin the wheel.");
+				BetInput.nextLine();
+				System.out.print("Spinning");
+				try {
+					Thread.sleep(1000);
+					System.out.print(".");
+					Thread.sleep(1000);
+					System.out.print(".");
+					Thread.sleep(1000);
+					System.out.println(".");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				Tile Result = this.GameWheel.Spin();
+				System.out.println("The ball landed on: " + Result.toString() + ".");
+				
+				if ((Result.getNumber() != 0) && (Result.getNumber() % 2 == 0)) {
+					System.out.println("You win!");
+					bet = bet + bet;
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println("$" + bet + " has been added to your bank.");
+					this.cash = this.cash + bet;
+					AddTile();
+				}
+				else {
+					Lose(bet);
+				}
+			}
+			else if (input.equalsIgnoreCase("2")){
+				//odd
+				System.out.println("Your bet is locked in!  Press enter to spin the wheel.");
+				BetInput.nextLine();
+				System.out.print("Spinning");
+				try {
+					Thread.sleep(1000);
+					System.out.print(".");
+					Thread.sleep(1000);
+					System.out.print(".");
+					Thread.sleep(1000);
+					System.out.println(".");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				Tile Result = this.GameWheel.Spin();
+				System.out.println("The ball landed on: " + Result.toString() + ".");
+				
+				if ((Result.getNumber() != 0) && (Result.getNumber() % 2 == 1)) {
+					System.out.println("You win!");
+					bet = bet + bet;
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println("$" + bet + " has been added to your bank.");
+					this.cash = this.cash + bet;
+					AddTile();
+				}
+				else {
+					Lose(bet);
+				}
+			}
+			else {
+				
+			}
+			
+			
+			
+			
 		}
 		
 		
@@ -257,5 +346,17 @@ public class Game {
 		}
 	}
 	
+	
+	public void CheckRent() {
+		if (CurrentTurn % 10 == 0) { //if it is turn 10, 20, etc trigger rent.
+			System.out.println("Oh shit!  Rent is due.  You owe $" + this.rent + ".");
+			System.out.println("$" + this.rent + " has been deducted from your bank.");
+			this.cash = this.cash - this.rent;
+			this.rent = (this.rent * 15)/10;  //multiply rent by 1.5.
+		}
+	}
+	public void RentDueIn() {
+		System.out.println("Rent is due in " + (10-(this.CurrentTurn % 10)) + " turns.");
+	}
 	
 }
