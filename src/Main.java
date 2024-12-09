@@ -15,6 +15,11 @@ public class Main {
 				GameState.CheckBonds();
 				GameState.CheckRent();
 				
+				if (GameState.LostGame()) {
+					lost = GameState.LostGame();
+					break;
+				}
+				
 				GameState.PrintOptions();
 				input = ScrInput.nextLine().trim().toLowerCase();
 				//TODO: This is where the logic for what to do will happen.
@@ -47,6 +52,40 @@ public class Main {
 				lost = GameState.LostGame();
 			}
 			
+			System.out.println("You've went BANKRUPT!");
+			try {
+				Thread.sleep(1000);
+				System.out.println("Better luck next time!");
+				Thread.sleep(1000);
+				System.out.print("But remember");
+				Thread.sleep(1000);
+				System.out.print(".");
+				Thread.sleep(1000);
+				System.out.print(".");
+				Thread.sleep(1000);
+				System.out.println(".");
+				Thread.sleep(1000);
+				System.out.println("THE HOUSE ALWAYS WINS");
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Would you like to play again?");
+			System.out.print("Y/N: ");
+			if (ScrInput.next().trim().equalsIgnoreCase("y")){
+				//do nothing
+			}
+			else {
+				Continue = false;
+				System.out.println("Goodbye!");
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		
