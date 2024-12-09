@@ -34,7 +34,7 @@ public class Wheel {
 		String num;
 		for (int i = 0; i < size; i++) {
 			curr = this.Tiles.get(i);
-			num = "00" + curr.getNumber();
+			num = "00" + Integer.toString(i+1);
 			num = num.substring(num.length()-3,num.length());
 			System.out.println(num + " -- " + curr.getColor() + " " + curr.getNumber() + ".");
 		}

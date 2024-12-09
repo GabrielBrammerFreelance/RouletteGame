@@ -1,12 +1,17 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
 	int cash;
+	int CurrentTurn;
 	Wheel StartWheel;
 	Wheel GameWheel;
 	Scanner BetInput;
+	ArrayList<Bond> Bonds;
 	
 	Game(Scanner scr){
+		Bonds = new ArrayList<Bond>();
+		this.CurrentTurn = 1;
 		this.cash = 200;
 		this.StartWheel = GameStarts.StandardAmerican();
 		this.GameWheel = StartWheel;
@@ -22,9 +27,11 @@ public class Game {
 		System.out.println("What would you like to do?");
 		System.out.println("Bet - Place a bet and spin the wheel.");
 		System.out.println("View - View the numbers on your wheel.");
+		System.out.println("Bonds - View or purchase bonds.");
 	}
 	
 	public void Bet() {
+		this.CurrentTurn = this.CurrentTurn + 1;
 		String input;
 		int bet;
 		int num;
@@ -47,28 +54,21 @@ public class Game {
 		System.out.println("2 - Number Bet.");
 		input = BetInput.nextLine();
 		input = input.trim();
-		if (input.equalsIgnoreCase("cancel")) {
-			return;
-		}
 		
 		//THIS IS THE COLOR BET CODE 
 		
-		else if (input.equals("1")){
+		if (input.equals("1")){
 			System.out.println("What color would you like to bet on? (RED or BLACK)");
 			input = BetInput.nextLine();
 			input = input.trim();
-			if (input.equalsIgnoreCase("cancel")) {
-				return;
-			}
-			else if (input.equalsIgnoreCase("red")){
+			if (input.equalsIgnoreCase("red")){
 				Color = TileColor.RED;
 			}
 			else if (input.equalsIgnoreCase("black")){
 				Color = TileColor.BLACK;
 			}
 			else {
-				System.out.println("Invalid input.  Exiting.");
-				return;
+				Color = null;
 			}
 			
 			System.out.println("Your bet is locked in!  Press enter to spin the wheel.");
@@ -153,7 +153,7 @@ public class Game {
 		
 		
 		else {
-			System.out.println("Unrecognized bet type.");
+			System.out.println("Unrecognized bet type.  - This is cheating.");
 			return;
 		}
 		
@@ -232,6 +232,29 @@ public class Game {
 	
 	public void view() {
 		this.GameWheel.PrintIndexedTiles();
+	}
+	
+	public void AddBond(int Value) {
+		this.cash = this.cash - Value;
+		this.Bonds.add(new Bond (Value, CurrentTurn));
+	}
+	public void CheckBonds() {
+		int val;
+		for (int i = 0; i < this.Bonds.size(); i++) {
+			if (this.Bonds.get(i).GetMaturity() <= this.CurrentTurn) {
+				val = this.Bonds.get(i).Mature();
+				System.out.println("A bond has matured.  $" + val + " has been added your your bank.");
+				this.Bonds.remove(i);
+				this.cash = this.cash + val;
+			}
+		}
+	}
+	public void PrintBonds() {
+		int i = 1;
+		for (Bond b : this.Bonds) {
+			System.out.println(i + " - " + b.toString(this.CurrentTurn));
+			i++;
+		}
 	}
 	
 	
