@@ -7,6 +7,9 @@ public class Game {
 	int CurrentTurn;
 	Wheel StartWheel;
 	Wheel GameWheel;
+	BJDeck StartDeck;
+	BJDeck GameDeck;
+	
 	Scanner BetInput;
 	ArrayList<Bond> Bonds;
 	
@@ -18,6 +21,8 @@ public class Game {
 		this.StartWheel = GameStarts.StandardAmerican();
 		this.GameWheel = StartWheel;
 		BetInput = scr;
+		this.StartDeck = GameStarts.StandardBlackjack();
+		this.GameDeck = this.StartDeck;
 	}
 
 
@@ -28,8 +33,9 @@ public class Game {
 		System.out.println("You currently have $" + cash + ".");
 		RentDueIn();
 		System.out.println("What would you like to do?");
-		System.out.println("Bet - Place a bet and spin the wheel.");
-		System.out.println("View - View the numbers on your wheel.");
+		System.out.println("Roulette - Place a bet and spin the evolving wheel.");
+		System.out.println("Blackjack - Place a bet and play Blackjack.");
+		System.out.println("View wheel - View the numbers on your Roulette wheel.");
 		System.out.println("Bonds - View or purchase bonds.");
 	}
 	
@@ -311,6 +317,154 @@ public class Game {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public void BlackJack() {
+		String input = "";
+		BJCard tempCard;
+		int bet = -1;
+		System.out.println("Welcome to the table!");
+		try {
+			Thread.sleep(1000);
+			while (true) {
+				System.out.println("How much would you like to bet?");
+				System.out.println("Tip: Payouts are 3:2, bet an even number.");
+				input = this.BetInput.nextLine().trim();
+				bet = Integer.parseInt(input);
+				if (bet > 0 && bet <= this.cash) {
+					break;
+				}
+				System.out.println("Try again!");
+				System.out.println("Please enter a number between 1 and " + this.cash + ".");
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BJHand Dealer = new BJHand();
+		BJHand Player = new BJHand();
+		Dealer.AddCard(this.GameDeck.DrawCard());
+		Player.AddCard(this.GameDeck.DrawCard());
+		Player.AddCard(this.GameDeck.DrawCard());
+		
+		System.out.print("Dealing cards");
+		try {
+			Thread.sleep(1000);
+			System.out.print(".");
+			Thread.sleep(1000);
+			System.out.print(".");
+			Thread.sleep(1000);
+			System.out.println(".");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (Player.GetScore() == 21) {
+			System.out.println("BLACKJACK!");
+			System.out.println("$" + (bet*3)/2 + " has been added to your bank.");
+			this.cash = this.cash + (bet/2);
+			return;
+		}
+		
+		while (true) {
+			System.out.println("Dealer's hand: " + Dealer.toString() + " FACE DOWN");
+			System.out.println("Dealer's score: " + Dealer.ScoreString());
+			System.out.println("Your hand: " + Player.toString());
+			System.out.println("Your score: " + Player.ScoreString());
+			System.out.println("1 - Hit me!");
+			System.out.println("2 - Stand");
+			while (true){
+				input = BetInput.nextLine().trim();
+				if (input.equals("1") || input.equals("2")) {
+					break;
+				}
+				else {
+					System.out.println("Error:  Please enter \"1\" or \"2\".");
+				}
+			}
+			if (input.equals("1")) {
+				tempCard = this.GameDeck.DrawCard();
+				System.out.println("You drew a " + tempCard + ".");
+				Player.AddCard(tempCard);
+				if (Player.Bust()) {
+					System.out.println("BUST!");
+					break;
+				}
+			}
+			else {
+				break;
+			}
+		}
+		
+		System.out.print("The dealers card was a");
+		try {
+			Thread.sleep(1000);
+			System.out.print(".");
+			Thread.sleep(1000);
+			System.out.print(".");
+			Thread.sleep(1000);
+			System.out.print(".");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		tempCard = this.GameDeck.DrawCard();
+		System.out.println(tempCard);
+		Dealer.AddCard(tempCard);
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		while (Dealer.GetScore() <= 16) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Dealer hits!");
+			tempCard = this.GameDeck.DrawCard();
+			System.out.println("Draws a: " + tempCard + ".");
+			Dealer.AddCard(tempCard);
+		}
+		
+		
+		
+		if (Player.Bust()) {
+			System.out.println("You lost $" + bet + ".");
+			this.cash = this.cash - bet;
+		}
+		else if (Dealer.Bust()) {
+			System.out.println("Dealer busts!");
+			System.out.println("You win!");
+			System.out.println("$" + (bet*3)/2 + " has been added to your bank.");
+			this.cash = this.cash + (bet/2);
+		}
+		else if (Player.GetScore() > Dealer.GetScore()) {
+			System.out.println("You win!");
+			System.out.println("$" + (bet*3)/2 + " has been added to your bank.");
+			this.cash = this.cash + (bet/2);
+		}
+		else {
+			System.out.println("You lose.");
+			System.out.println("You lost $" + bet + ".");
+			this.cash = this.cash - bet;
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public boolean LostGame() {
 		if (cash <= 0) {

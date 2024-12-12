@@ -44,5 +44,54 @@ public class GameStarts {
 		w.addTile(TileColor.BLACK, 2);
 		return w;
 	}
+	
+	public static Wheel RandomWheel() {  //purely random roulette wheel.
+		Wheel w = StandardAmerican();
+		Wheel out = new Wheel();
+		for (int i = 0; i < 37; i++) {
+			out.addTileDirect(w.Spin());
+		}
+		return out;
+	}
+	
+	
+	
+	public static BJDeck StandardBlackjack() {
+		BJDeck d = new BJDeck();
+		d.AddCard(BJCard.ACE);
+		d.AddCard(BJCard.TWO);
+		d.AddCard(BJCard.THREE);
+		d.AddCard(BJCard.FOUR);
+		d.AddCard(BJCard.FIVE);
+		d.AddCard(BJCard.SIX);
+		d.AddCard(BJCard.SEVEN);
+		d.AddCard(BJCard.EIGHT);
+		d.AddCard(BJCard.NINE);
+		d.AddCard(BJCard.TEN);
+		d.AddCard(BJCard.JACK);
+		d.AddCard(BJCard.QUEEN);
+		d.AddCard(BJCard.KING);
+		return d;
+	}
+	
+	public static BJDeck FacelessAces() {  //this could be a fun alt blackjack gamemode ?  maybe?
+		BJDeck d = new BJDeck();
+		d.AddCard(BJCard.ACE);
+		d.AddCard(BJCard.TWO);
+		d.AddCard(BJCard.THREE);
+		d.AddCard(BJCard.FOUR);
+		d.AddCard(BJCard.FIVE);
+		d.AddCard(BJCard.SIX);
+		d.AddCard(BJCard.SEVEN);
+		d.AddCard(BJCard.EIGHT);
+		d.AddCard(BJCard.NINE);
+		d.AddCard(BJCard.ACE);
+		d.AddCard(BJCard.ACE);
+		d.AddCard(BJCard.ACE);
+		d.AddCard(BJCard.ACE);
+		return d;
+	}
+	
+	
 
 }

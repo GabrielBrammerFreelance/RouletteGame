@@ -23,31 +23,17 @@ public class Main {
 				GameState.PrintOptions();
 				input = ScrInput.nextLine().trim().toLowerCase();
 				//TODO: This is where the logic for what to do will happen.
-				if (input.equals("bet")) {
+				if (input.equals("Roulette")) {
 					GameState.Bet();
 				}
-				else if (input.equals("view")) {
+				else if (input.equals("view wheel")) {
 					GameState.view();
 				}
 				else if (input.equals("bonds")) {
-					System.out.println("1 - View bonds.");
-					System.out.println("2 - Purchase bonds.");
-					input = ScrInput.nextLine().trim();
-					if (input.equals("1")) {
-						GameState.PrintBonds();
-					}
-					else if (input.equals("2")) {
-						System.out.println("Bonds mature after 5 turns.  What size bond would you like to purchase?");
-						System.out.println("1 - $10 bond.");
-						System.out.println("2 - $100 bond.");
-						input = ScrInput.nextLine();
-						if (input.equals("1")) {
-							GameState.AddBond(10);
-						}
-						else if (input.equals("2")) {
-							GameState.AddBond(100);
-						}
-					}
+					Bonds(GameState, ScrInput);
+				}
+				else if (input.equals("blackjack")) {
+					GameState.BlackJack();
 				}
 				lost = GameState.LostGame();
 			}
@@ -90,6 +76,28 @@ public class Main {
 		
 		
 
+	}
+	
+	private static void Bonds(Game GameState, Scanner ScrInput) {
+		String input;
+		System.out.println("1 - View bonds.");
+		System.out.println("2 - Purchase bonds.");
+		input = ScrInput.nextLine().trim();
+		if (input.equals("1")) {
+			GameState.PrintBonds();
+		}
+		else if (input.equals("2")) {
+			System.out.println("Bonds mature after 5 turns.  What size bond would you like to purchase?");
+			System.out.println("1 - $10 bond.");
+			System.out.println("2 - $100 bond.");
+			input = ScrInput.nextLine();
+			if (input.equals("1")) {
+				GameState.AddBond(10);
+			}
+			else if (input.equals("2")) {
+				GameState.AddBond(100);
+			}
+		}
 	}
 	
 	
